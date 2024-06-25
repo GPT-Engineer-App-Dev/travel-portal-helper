@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -12,6 +13,7 @@ const Index = () => {
     checkin: '',
     checkout: '',
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({
@@ -27,6 +29,10 @@ const Index = () => {
       { id: 2, airline: 'Airline B', departure: form.departure, arrival: form.arrival, date: form.checkin },
     ];
     setFlights(availableFlights);
+  };
+
+  const confirmBooking = (flight) => {
+    navigate('/confirmation', { state: { flight, form } });
   };
 
   return (
@@ -66,6 +72,7 @@ const Index = () => {
                 <p><strong>Departure:</strong> {flight.departure}</p>
                 <p><strong>Arrival:</strong> {flight.arrival}</p>
                 <p><strong>Date:</strong> {flight.date}</p>
+                <Button className="mt-2" onClick={() => confirmBooking(flight)}>Confirm Booking</Button>
               </li>
             ))}
           </ul>
