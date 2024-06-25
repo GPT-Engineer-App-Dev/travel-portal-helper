@@ -1,10 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 const Index = () => {
+  const [flights, setFlights] = useState([]);
+  const [form, setForm] = useState({
+    departure: '',
+    arrival: '',
+    checkin: '',
+    checkout: '',
+  });
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const searchFlights = () => {
+    // Mock flight data
+    const availableFlights = [
+      { id: 1, airline: 'Airline A', departure: form.departure, arrival: form.arrival, date: form.checkin },
+      { id: 2, airline: 'Airline B', departure: form.departure, arrival: form.arrival, date: form.checkin },
+    ];
+    setFlights(availableFlights);
+  };
+
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center space-y-6">
       <h1 className="text-4xl font-bold">Travel Booking</h1>
@@ -14,20 +38,39 @@ const Index = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="destination">Destination</Label>
-            <Input id="destination" placeholder="Enter your destination" />
+            <Label htmlFor="departure">Departure Location</Label>
+            <Input id="departure" placeholder="Enter departure location" value={form.departure} onChange={handleChange} />
+          </div>
+          <div>
+            <Label htmlFor="arrival">Arrival Location</Label>
+            <Input id="arrival" placeholder="Enter arrival location" value={form.arrival} onChange={handleChange} />
           </div>
           <div>
             <Label htmlFor="checkin">Check-in Date</Label>
-            <Input id="checkin" type="date" />
+            <Input id="checkin" type="date" value={form.checkin} onChange={handleChange} />
           </div>
           <div>
             <Label htmlFor="checkout">Check-out Date</Label>
-            <Input id="checkout" type="date" />
+            <Input id="checkout" type="date" value={form.checkout} onChange={handleChange} />
           </div>
-          <Button className="w-full">Search</Button>
+          <Button className="w-full" onClick={searchFlights}>Search</Button>
         </CardContent>
       </Card>
+      {flights.length > 0 && (
+        <div className="w-full max-w-md mt-6">
+          <h2 className="text-2xl font-bold">Available Flights</h2>
+          <ul className="space-y-4">
+            {flights.map(flight => (
+              <li key={flight.id} className="border p-4 rounded">
+                <p><strong>Airline:</strong> {flight.airline}</p>
+                <p><strong>Departure:</strong> {flight.departure}</p>
+                <p><strong>Arrival:</strong> {flight.arrival}</p>
+                <p><strong>Date:</strong> {flight.date}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
